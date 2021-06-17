@@ -3,19 +3,21 @@
         <nav class="pf-c-nav pf-m-light" aria-label="Global">
             <ul class="pf-c-nav__list">
                 <li class="pf-c-nav__item">
-                    <a routerLink="" class="pf-c-nav__link" routerLinkActive="pf-m-current">Lighthouse</a>
+                    <a routerLink="" class="pf-c-nav__link" routerLinkActive="pf-m-current"
+                        [routerLinkActiveOptions]="{exact:true}">Lighthouse</a>
                 </li>
                 <li class="pf-c-nav__item">
                     <a routerLink="/dashboard" class="pf-c-nav__link" aria-current="page"
-                        routerLinkActive="pf-m-current">Dashboard</a>
+                        routerLinkActive="pf-m-current" [routerLinkActiveOptions]="{exact:true}">Dashboard</a>
                 </li>
                 <li class="pf-c-nav__item">
-                    <a routerLink="/dashboard" class="pf-c-nav__link" routerLinkActive="pf-m-current">Lighthouse CI</a>
+                    <a routerLink="/dashboard/ci" class="pf-c-nav__link" routerLinkActive="pf-m-current"
+                        [routerLinkActiveOptions]="{exact:true}">Lighthouse CI</a>
                 </li>
             </ul>
         </nav>
     </div>
-    <div class="pf-l-flex__item pf-m-grow">
+    <div class="pf-l-flex__item pf-m-grow pf-u-h-100 pf-u-py-lg pf-u-pr-md">
         <ng-content></ng-content>
     </div>
 </div>
