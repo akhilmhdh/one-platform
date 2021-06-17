@@ -1,0 +1,24 @@
+<div class="pf-l-flex pf-m-column pf-u-px-md pf-u-h-100 pf-u-cursor-pointer">
+    <div class="pf-l-flex__item pf-m-spacer-lg">
+        <h1 class="pf-c-title pf-m-2xl">
+            Run lighthouse on internal web properties
+        </h1>
+    </div>
+    <div class="pf-l-flex pf-m-grow pf-m-justify-content-space-between">
+        <div class="pf-l-flex__item pf-u-mb-md" *ngFor="let index of [1,2,3]">
+            <a>
+                <app-property-card>
+                    <img src="assets/containers.svg" icon />
+                    <div class="pf-l-flex pf-m-align-center" [title]>
+                        <div class="pf-l-flex__item">
+                            <h1 class="pf-c-title pf-m-md pf-u-font-weight-bold" [title]>One Platform</h1>
+                        </div>
+                        <div class="pf-l-flex__item">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </app-property-card>
+            </a>
+        </div>
+    </div>
+</div>
