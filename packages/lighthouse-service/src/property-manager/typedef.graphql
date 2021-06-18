@@ -5,11 +5,30 @@ input PropertyAppInput {
   branch: String
 }
 
+input AddPropertyAppInput {
+  name: String!
+  branch: String!
+}
+
 input PropertyInput {
   name: String
   description: String
-  projectId: String
+  projectId: String!
   apps: [PropertyAppInput!]!
+}
+
+input AddPropertyInput {
+  name: String!
+  description: String
+  projectId: String!
+  apps: [AddPropertyAppInput!]!
+}
+
+input UpdatePropertyInput {
+  name: String
+  description: String
+  projectId: String
+  apps: [PropertyAppInput!]
 }
 
 type PropertyUserProfileType {
@@ -41,12 +60,37 @@ type Query {
   """
   list all the properties
   """
-  fetchProperties: [PropertyType]
+  fetchProperties(
+    limit: Int
+    offset: Int
+    search: String
+    user: String
+  ): [PropertyType]
 }
 
 type Mutation {
   """
   create a new property
   """
-  createProperty(property: PropertyInput): PropertyType
+  createProperty(property: AddPropertyInput!): PropertyType
+  """
+  update a property
+  """
+  updateProperty(id: ID!, data: UpdatePropertyInput): PropertyType
+  """
+  delete a property
+  """
+  deleteProperty(id: ID!): PropertyType
+  """
+  add an app to a property
+  """
+  createApp(propertyId: ID!, appData: AddPropertyAppInput!): PropertyType
+  """
+  update an app from a property
+  """
+  updateApp(appId: ID!, appData: PropertyAppInput!): PropertyType
+  """
+  delete an app from a property
+  """
+  deleteApp(appId: ID!): PropertyType
 }
