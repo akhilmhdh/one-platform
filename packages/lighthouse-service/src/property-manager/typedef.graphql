@@ -1,0 +1,52 @@
+scalar DateTime
+
+input PropertyAppInput {
+  name: String
+  branch: String
+}
+
+input PropertyInput {
+  name: String
+  description: String
+  projectId: String
+  apps: [PropertyAppInput!]!
+}
+
+type PropertyUserProfileType {
+  name: String
+  uid: String
+  rhatUUID: String
+  email: String
+}
+
+type PropertyAppType {
+  id: ID
+  name: String
+  branch: String
+}
+
+type PropertyType {
+  id: ID
+  name: String
+  description: String
+  projectId: String
+  apps: [PropertyAppType!]
+  createdBy: PropertyUserProfileType
+  createdOn: DateTime
+  updatedBy: PropertyUserProfileType
+  updatedOn: DateTime
+}
+
+type Query {
+  """
+  list all the properties
+  """
+  fetchProperties: [PropertyType]
+}
+
+type Mutation {
+  """
+  create a new property
+  """
+  createProperty(property: PropertyInput): PropertyType
+}
