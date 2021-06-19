@@ -6,13 +6,13 @@
     </div>
     <div class="pf-l-grid pf-m-gutter">
         <div class="pf-l-grid__item pf-m-12-col-on-sm pf-m-6-col-on-md pf-m-4-col-on-lg pf-m-3-col-on-2xl"
-            *ngFor="let index of [1,2,4,1,4]">
-            <a>
+            *ngFor="let property of properties">
+            <a [routerLink]="'./'+property.projectId">
                 <app-property-card>
                     <img src="assets/containers.svg" icon />
                     <div class="pf-l-flex pf-m-align-center" [title]>
                         <div class="pf-l-flex__item">
-                            <h1 class="pf-c-title pf-m-md pf-u-font-weight-bold" [title]>One Platform</h1>
+                            <h1 class="pf-c-title pf-m-md pf-u-font-weight-bold" [title]>{{property.name}}</h1>
                         </div>
                         <div class="pf-l-flex__item">
                             <i class="fas fa-arrow-right"></i>
