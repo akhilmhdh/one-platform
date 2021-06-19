@@ -7,3 +7,18 @@
   --pf-c-nav__link--m-current--Color: #2866cc;
   --pf-c-nav__link--m-current--BackgroundColor: #2866cc1a;
 }
+
+.pf-c-button.pf-m-primary {
+  --pf-c-button--m-primary--Color: var(--pf-global--palette--red-100);
+  --pf-c-button--m-primary--BackgroundColor: var(--pf-global--palette--red-50);
+
+  &:hover {
+    --pf-c-button--m-primary--BackgroundColor: var(
+      --pf-global--palette--red-200
+    ) !important;
+  }
+}
+
+body {
+  overflow: hidden;
+}

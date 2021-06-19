@@ -1,11 +1,12 @@
-<div class="pf-l-flex pf-m-column pf-u-px-md pf-u-h-100 pf-u-cursor-pointer">
+<div class="pf-l-flex pf-m-column pf-u-p-lg pf-u-h-100 pf-m-nowrap">
     <div class="pf-l-flex__item pf-m-spacer-lg">
         <h1 class="pf-c-title pf-m-2xl">
             Run lighthouse on internal web properties
         </h1>
     </div>
-    <div class="pf-l-flex pf-m-grow pf-m-justify-content-space-between">
-        <div class="pf-l-flex__item pf-u-mb-md" *ngFor="let index of [1,2,3]">
+    <div class="pf-l-grid pf-m-gutter">
+        <div class="pf-l-grid__item pf-m-12-col-on-sm pf-m-6-col-on-md pf-m-4-col-on-lg pf-m-3-col-on-2xl"
+            *ngFor="let index of [1,2,4,1,4]">
             <a>
                 <app-property-card>
                     <img src="assets/containers.svg" icon />

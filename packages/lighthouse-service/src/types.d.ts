@@ -39,15 +39,14 @@ type PropertyUserProfileType = {
 };
 
 type AppType = {
-  _id?: string;
+  _id?: any;
   id?: string;
   name: string;
   branch: string;
 };
 
 type PropertyType = {
-  _id?: string;
-  id: string;
+  _id?: any;
   name: string;
   description: string;
   projectId: string;

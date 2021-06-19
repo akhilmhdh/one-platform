@@ -19,7 +19,7 @@ export const PropertyResolver = {
       if (user) filters.createdBy = user;
 
       const properties = await Property.find(filters)
-        .limit(limit || 10)
+        .limit(limit || 100)
         .skip(offset || 0)
         .exec();
       return properties.map((el: any) => {

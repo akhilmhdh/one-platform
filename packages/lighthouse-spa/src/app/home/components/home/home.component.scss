@@ -26,9 +26,17 @@
     margin-top: -22px;
     color: #000;
   }
-  &-code-block {
-    overflow: scroll;
+  &-code-container {
+    flex: 0 0 40vh;
+    max-height: 40vh;
     height: 100%;
+  }
+  &-code-block {
+    height: 100%;
+    overflow: auto;
+  }
+  &-code-header {
+    position: sticky;
   }
   &-search {
     background-color: #efefef;
@@ -37,8 +45,4 @@
     color: #3c3f42;
     outline: none;
   }
-}
-
-.overflow {
-  overflow: auto;
 }

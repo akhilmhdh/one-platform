@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="pf-u-mt-4xl pf-u-mb-2xl">
+    <div class="pf-u-mt-4xl pf-u-mb-md">
         <div class="pf-l-bullseye">
             <div class="pf-c-input-group pf-u-w-33 pf-u-mr-md">
                 <input class="pf-c-form-control pf-m-search lighthouse-search" type="search" id="sites" name="sites"
@@ -67,22 +67,22 @@
         </div>
     </div>
 
-    <!-- <div class="pf-l-bullseye pf-u-mt-2xl">
+    <div class="pf-l-flex pf-m-justify-content-center pf-u-mb-xl">
         <div class="pf-u-font-weight-bold">Presets</div>: &nbsp;
         <span *ngFor="let preset of presets;index as i">
             <input type="radio" name="preset" value="{{ preset.value }}" [(ngModel)]="selectedPreset">&nbsp;
             <label for="preset">{{ preset.name }}</label>&nbsp;&nbsp;
         </span>
-    </div> -->
+    </div>
 
-    <div class="pf-l-flex pf-m-align-items-center pf-m-justify-content-center pf-u-mb-md" *ngIf="showScore">
+    <div class="pf-l-flex pf-m-align-items-center pf-m-justify-content-center pf-u-mb-xl" *ngIf="showScore">
         <app-outlined-pie-graph *ngFor="let report of lhciScores" score={{report.score}} name={{report.name}}
             type={{report.class}}>
         </app-outlined-pie-graph>
     </div>
 
-    <div class="pf-u-flex-grow-1 pf-c-code-block overflow" *ngIf="!showScore">
-        <!-- <div class="pf-c-code-block__header pf-u-mt-2xl">
+    <div class="pf-c-code-block pf-u-pb-md lighthouse-code-container">
+        <div class="pf-c-code-block__header lighthouse-code-header">
             <div class="pf-c-code-block__actions">
                 <div class="pf-c-code-block__actions-item">
                     <button class="pf-c-button pf-m-plain" type="button" aria-label="Upload to lighthouse ci server"
@@ -91,7 +91,7 @@
                     </button>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="pf-c-code-block__content lighthouse-code-block" id="codeBlock">
             <pre class="pf-c-code-block__pre">
                 <code class="pf-c-code-block__code" [innerHtml]="auditProgress"></code>
@@ -100,7 +100,7 @@
     </div>
 
     <!-- Upload Modal -->
-    <!-- <div class="pf-c-backdrop" *ngIf="toggleModal">
+    <div class="pf-c-backdrop" *ngIf="toggleModal">
         <div class="pf-l-bullseye">
             <div class="pf-c-modal-box pf-u-w-50" role="dialog" aria-modal="true" aria-labelledby="upload-results-title"
                 aria-describedby="upload-results-description">
@@ -114,7 +114,7 @@
                 </header>
                 <div class="pf-c-modal-box__body">
                     <div class="pf-l-grid pf-m-gutter">
-                        <div class="pf-l-grid__item pf-m-4-col">
+                        <div class="pf-l-grid__item pf-m-6-col">
                             <label for="project-select">Project</label>
                             <select class="pf-c-form-control pf-m-placeholder" id="project-select" name="project-select"
                                 aria-label="project select" [(ngModel)]="projectID" required>
@@ -124,7 +124,7 @@
                             </select>
                         </div>
 
-                        <div class="pf-l-grid__item pf-m-4-col">
+                        <div class="pf-l-grid__item pf-m-6-col">
                             <label for="project-branch">Branch</label>
                             <select class="pf-c-form-control pf-m-placeholder" id="project-branch" name="project-branch"
                                 aria-label="project branch" [(ngModel)]="property.currentBranch"
@@ -136,7 +136,7 @@
                             </select>
                         </div>
 
-                        <div class="pf-l-grid__item pf-m-4-col">
+                        <div class="pf-l-grid__item pf-m-12-col">
                             <label for="build-token">Build Token</label>
                             <input class="pf-c-form-control" type="text" [(ngModel)]="property.buildToken"
                                 id="buildToken" aria-label="Build Token" placeholder="Enter Build Token"
@@ -151,6 +151,6 @@
                 </footer>
             </div>
         </div>
-    </div> -->
+    </div>
 
 </section>
