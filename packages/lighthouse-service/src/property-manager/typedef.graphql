@@ -66,6 +66,10 @@ type Query {
     search: String
     user: String
   ): [PropertyType]
+  """
+  to fetch just one property based on id
+  """
+  fetchProperty(id: ID!): PropertyType
 }
 
 type Mutation {

@@ -16,7 +16,17 @@ export const LighthouseAuditResolver = {
       return await lhci.fetchProjectDetails(args.serverBaseUrl || process.env.SERVER_BASE_URL, args.buildToken);
     },
     async fetchProjectBuilds(root: any, args: any, ctx: any){
-      return await lhci.fetchProjectBuilds(args.serverBaseUrl || process.env.SERVER_BASE_URL, args.projectID, args.branch, args.limit);
+      const projectBuilds = await lhci.fetchProjectBuilds( args.serverBaseUrl || process.env.SERVER_BASE_URL, args.projectID, args.branch, args.limit );
+      return projectBuilds.map( async ( build: any ) => {
+        const { id, projectId } = build;
+        const score = await lhci.fetchProjectLHR(
+          args.serverBaseUrl || process.env.SERVER_BASE_URL,
+          projectId,
+          id
+        );
+        build.score = score;
+        return build;
+      });
     },
     async fetchProjectBranches(root: any, args: any, ctx: any){
       return await lhci.fetchProjectBranches(args.serverBaseUrl || process.env.SERVER_BASE_URL, args.projectID);
@@ -73,7 +83,7 @@ export const LighthouseAuditResolver = {
   Mutation: {
      auditWebsite(root: any, args: any, ctx: any) {
       const LHCI_BUILD_CONTEXT__CURRENT_HASH = new Date().getTime().toString(16).split('').reverse().join('');
-      const lhciScript = spawn(` cd /tmp && mkdir ${LHCI_BUILD_CONTEXT__CURRENT_HASH} && cd ${LHCI_BUILD_CONTEXT__CURRENT_HASH} && 
+      const lhciScript = spawn(` cd /tmp && mkdir ${LHCI_BUILD_CONTEXT__CURRENT_HASH} && cd ${LHCI_BUILD_CONTEXT__CURRENT_HASH} &&
       lhci healthcheck && lhci collect --settings.chromeFlags='--no-sandbox --ignore-certificate-errors' --url=${args.property.sites} && lhci assert --preset=${args.property.preset || `lighthouse:recommended`}`, {
         shell: true
       });
@@ -96,7 +106,7 @@ export const LighthouseAuditResolver = {
     async upload(root: any, args: any, ctx: any) {
       const profile = await lhci.fetchProfileFavicon ( args.property.authorEmail );
       const LHCI_BUILD_CONTEXT__COMMIT_MESSAGE = `${ args.property.commitMessage || `Benchmark Commit by ${ args.property.authorName }` }`;
-      const lhciScript = spawn( ` cd /tmp && cd ${ args.property.auditId } && 
+      const lhciScript = spawn( ` cd /tmp && cd ${ args.property.auditId } &&
       export LHCI_BUILD_CONTEXT__CURRENT_HASH=${ args.property.auditId } &&
       export LHCI_BUILD_CONTEXT__COMMIT_TIME="${ new Date().toString() }" &&
       export LHCI_BUILD_CONTEXT__CURRENT_BRANCH="${ args.property.currentBranch || process.env.CURRENT_BRANCH }" &&

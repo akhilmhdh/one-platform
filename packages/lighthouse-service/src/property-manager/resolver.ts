@@ -28,6 +28,13 @@ export const PropertyResolver = {
         return el;
       });
     },
+    async fetchProperty(root: any, args: any, ctx: any) {
+      const { id } = args;
+      const property: any = await Property.findById(id).exec();
+      property.createdBy = dummyUser;
+      property.updatedBy = dummyUser;
+      return property;
+    },
   },
   Mutation: {
     async createProperty(root: any, args: any, ctx: any) {
