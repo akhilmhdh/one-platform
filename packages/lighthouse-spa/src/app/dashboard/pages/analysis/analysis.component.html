@@ -1,0 +1,36 @@
+<div class="pf-l-flex pf-m-column pf-m-nowrap pf-u-p-lg">
+    <div class="pf-l-flex__item">
+        <nav class="pf-c-breadcrumb" aria-label="breadcrumb">
+            <ol class="pf-c-breadcrumb__list">
+                <li class="pf-c-breadcrumb__item">
+                    <span class="pf-c-breadcrumb__item-divider">
+                        <i class="fas fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    <a routerLink="/dashboard" class="pf-c-breadcrumb__link">Dashboard</a>
+                </li>
+                <li class="pf-c-breadcrumb__item">
+                    <span class="pf-c-breadcrumb__item-divider">
+                        <i class="fas fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                    <span class="pf-c-breadcrumb__link pf-m-current" aria-current="page">
+                        {{title}}
+                    </span>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <div class="pf-l-flex pf-m-grow pf-m-align-items-center pf-m-column">
+        <div id="apps-score-card" class="pf-l-flex pf-m-column" *ngFor="let app of apps">
+            <div class="pf-l-flex__item pf-c-content">
+                <h3>{{app.name}}</h3>
+            </div>
+            <div class="pf-l-flex__item">
+                <div class="pf-c-card">
+                    <div class="pf-c-card__body">
+                        Card
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

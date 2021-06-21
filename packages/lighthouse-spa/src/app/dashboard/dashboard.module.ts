@@ -6,9 +6,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PropertyCardComponent } from './components/property-card/property-card.component';
+import { AnalysisComponent } from './pages/analysis/analysis.component';
 
 @NgModule({
-  declarations: [DashboardComponent, PropertyCardComponent],
+  declarations: [DashboardComponent, PropertyCardComponent, AnalysisComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

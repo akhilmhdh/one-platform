@@ -8,7 +8,7 @@ import { DashboardService } from 'app/dashboard/dashboard.service';
 })
 export class DashboardComponent implements OnInit {
   loading = true;
-  properties: FetchProperties[] = [];
+  properties: Properties[] = [];
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
