@@ -8,6 +8,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PropertyCardComponent } from './components/property-card/property-card.component';
 import { AnalysisComponent } from './pages/analysis/analysis.component';
 
+import { SharedModule } from 'app/shared/shared.module';
+
 @NgModule({
   declarations: [DashboardComponent, PropertyCardComponent, AnalysisComponent],
   imports: [
@@ -15,6 +17,7 @@ import { AnalysisComponent } from './pages/analysis/analysis.component';
     DashboardRoutingModule,
     GraphQLModule,
     HttpClientModule,
+    SharedModule,
   ],
 })
 export class DashboardModule {}

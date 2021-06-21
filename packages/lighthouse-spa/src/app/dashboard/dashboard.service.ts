@@ -31,7 +31,7 @@ export class DashboardService extends GraphQLModule {
   }
 
   fetchScores(projectId: string, apps: PropertyApps[]) {
-    return this.apollo.watchQuery<Record<string, PropertyBuilds>>({
+    return this.apollo.watchQuery<Record<string, PropertyBuilds[]>>({
       query: FetchPropertyScore(projectId, apps),
       variables: {
         projectId,

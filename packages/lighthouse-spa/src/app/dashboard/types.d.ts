@@ -12,15 +12,21 @@ type PropertyApps = {
 };
 
 type Score = {
-  pwa: string;
-  accessibility: string;
-  seo: string;
-  bestPractices: string;
-  performance: string;
+  pwa: number;
+  accessibility: number;
+  seo: number;
+  bestPractices: number;
+  performance: number;
 };
 
 type PropertyBuilds = {
   id: string;
   projectId: string;
   score: Score[];
+};
+
+type CardScore = {
+  name: keyof Score;
+  label: string;
+  score: number;
 };

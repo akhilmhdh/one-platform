@@ -27,7 +27,12 @@
             <div class="pf-l-flex__item">
                 <div class="pf-c-card">
                     <div class="pf-c-card__body">
-                        Card
+                        <div class="pf-l-split pf-m-gutter">
+                            <div class="pf-l-split__item" *ngFor="let score of scores[app.id]">
+                                <app-outlined-pie-graph score={{score.score}} name={{score.label}}>
+                                </app-outlined-pie-graph>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
