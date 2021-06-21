@@ -9,16 +9,15 @@ export class OutlinedPieGraphComponent implements OnInit {
   constructor() {}
   @Input() score = 0;
   @Input() name = '';
-  type: 'orange' | 'green' | 'blue' = 'orange';
   ngOnInit(): void {}
 
   getType() {
     if (this.score >= 0 && this.score <= 49) {
-      this.type = 'orange';
+      return 'low';
     } else if (this.score >= 50 && this.score <= 89) {
-      this.type = 'blue';
+      return 'average';
     } else if (this.score >= 90 && this.score <= 100) {
-      this.type = 'green';
+      return 'best';
     }
   }
 }

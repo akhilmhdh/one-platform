@@ -19,14 +19,14 @@
     width: 120px;
     height: 120px;
   }
-  &-circle-chart.orange .gauge-circle {
-    stroke: #ff9f00;
+  &-circle-chart.low .gauge-circle {
+    stroke: #ee0000;
   }
-  &-circle-chart.green .gauge-circle {
-    stroke: #4cc790;
+  &-circle-chart.average .gauge-circle {
+    stroke: #f0ab00;
   }
-  &-circle-chart.blue .gauge-circle {
-    stroke: #3c9ee5;
+  &-circle-chart.best .gauge-circle {
+    stroke: #3e8635;
   }
   &-percentage {
     font-family: sans-serif;
