@@ -35,7 +35,7 @@ type PropertyUserProfileType = {
   name: String;
   uid: string;
   rhatUUID: string;
-  email: string;
+  mail: string;
 };
 
 type AppType = {
@@ -51,8 +51,8 @@ type PropertyType = {
   description: string;
   projectId: string;
   apps: AppType[];
-  createdOn: string | PropertyUserProfileType;
-  createdBy: string;
+  createdBy: string | PropertyUserProfileType;
+  createdOn: string;
   updatedOn: string;
   updatedBy: string | PropertyUserProfileType;
 };

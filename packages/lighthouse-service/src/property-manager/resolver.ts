@@ -1,4 +1,5 @@
 import { FilterQuery } from "mongoose";
+import { getUserProfile, populateMongooseDocWithUser } from "./helpers";
 import { Property } from "./schema";
 
 const dummyUser = {
@@ -22,35 +23,54 @@ export const PropertyResolver = {
         .limit(limit || 100)
         .skip(offset || 0)
         .exec();
-      return properties.map((el: any) => {
-        el.createdBy = dummyUser;
-        el.updatedBy = dummyUser;
-        return el;
+
+      const userQueryCache: Record<string, PropertyUserProfileType> = {};
+
+      return properties.map(async (mongoosePropertyDoc) => {
+        const property = mongoosePropertyDoc.toObject();
+        const rhUUID = property.createdBy as string;
+        // if not saved in queryCache fetch it from user service api
+        if (!userQueryCache?.[rhUUID]) {
+          const user = await getUserProfile(rhUUID);
+          userQueryCache[rhUUID] = user;
+        }
+        property.createdBy = userQueryCache[rhUUID];
+        property.updatedBy = userQueryCache[rhUUID];
+        return property;
       });
     },
     async fetchProperty(root: any, args: any, ctx: any) {
       const { id } = args;
-      const property: any = await Property.findById(id).exec();
-      property.createdBy = dummyUser;
-      property.updatedBy = dummyUser;
+      const mongoosePropertyDoc = await Property.findById(id).exec();
+      if (!mongoosePropertyDoc) return {};
+      const property: PropertyType = mongoosePropertyDoc.toObject();
+      // populate object user field with user data from user-group service
+      const user = await getUserProfile(property.createdBy as string);
+      property.createdBy = user;
+      property.updatedBy = user;
       return property;
     },
   },
   Mutation: {
     async createProperty(root: any, args: any, ctx: any) {
       const { property } = args;
-      property.createdBy = dummyUser.rhatUUID;
-      property.updatedBy = dummyUser.rhatUUID;
-      const data = new Property(property);
-      return data.save();
+      property.updatedBy = property.createdBy;
+      const mongoosePropertyDoc = new Property(property);
+      const savedProperty = await mongoosePropertyDoc.save();
+      return populateMongooseDocWithUser(savedProperty);
     },
     async updateProperty(root: any, args: any, ctx: any) {
       const { id, data } = args;
-      return Property.findByIdAndUpdate(id, data, { new: true }).exec();
+      const mongoosePropertyDoc = await Property.findByIdAndUpdate(id, data, {
+        new: true,
+      }).exec();
+
+      return populateMongooseDocWithUser(mongoosePropertyDoc);
     },
     async deleteProperty(root: any, args: any, ctx: any) {
       const { id } = args;
-      return Property.findByIdAndDelete(id).exec();
+      const mongoosePropertyDoc = await Property.findByIdAndDelete(id).exec();
+      return populateMongooseDocWithUser(mongoosePropertyDoc);
     },
     async createApp(root: any, args: any, ctx: any) {
       const { propertyId, appData } = args;

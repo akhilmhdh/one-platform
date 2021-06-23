@@ -11,7 +11,7 @@ export const PropertySchema: Schema = new Schema({
   updatedBy: String,
 });
 
-interface PropertyModel extends PropertyType, Document {}
+export interface PropertyModel extends PropertyType, Document {}
 
 interface PropertyModelStatic extends Model<PropertyModel> {}
 

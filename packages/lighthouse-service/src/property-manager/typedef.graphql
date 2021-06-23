@@ -22,6 +22,7 @@ input AddPropertyInput {
   description: String
   projectId: String!
   apps: [AddPropertyAppInput!]!
+  createdBy: String!
 }
 
 input UpdatePropertyInput {
@@ -29,13 +30,14 @@ input UpdatePropertyInput {
   description: String
   projectId: String
   apps: [PropertyAppInput!]
+  updatedBy: String!
 }
 
 type PropertyUserProfileType {
   name: String
   uid: String
   rhatUUID: String
-  email: String
+  mail: String
 }
 
 type PropertyAppType {
