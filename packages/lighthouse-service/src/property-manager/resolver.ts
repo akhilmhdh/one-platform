@@ -27,7 +27,7 @@ export const PropertyResolver = {
       const userQueryCache: Record<string, PropertyUserProfileType> = {};
 
       return properties.map(async (mongoosePropertyDoc) => {
-        const property = mongoosePropertyDoc.toObject();
+        const property = mongoosePropertyDoc.toObject({ virtuals: true });
         const rhUUID = property.createdBy as string;
         // if not saved in queryCache fetch it from user service api
         if (!userQueryCache?.[rhUUID]) {
@@ -43,7 +43,9 @@ export const PropertyResolver = {
       const { id } = args;
       const mongoosePropertyDoc = await Property.findById(id).exec();
       if (!mongoosePropertyDoc) return {};
-      const property: PropertyType = mongoosePropertyDoc.toObject();
+      const property: PropertyType = mongoosePropertyDoc.toObject({
+        virtuals: true,
+      });
       // populate object user field with user data from user-group service
       const user = await getUserProfile(property.createdBy as string);
       property.createdBy = user;

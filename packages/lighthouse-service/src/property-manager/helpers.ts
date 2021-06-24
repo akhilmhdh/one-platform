@@ -4,10 +4,10 @@ import { PropertyModel } from "./schema";
 export const getUserProfile = async (
   rhUUID: string
 ): Promise<PropertyUserProfileType> => {
-  const userQuery = `{
+  const userQuery = `query GetUsers{
       getUsersBy(rhatUUID:"${rhUUID}") {
           name
-          title
+          mail
           uid
           rhatUUID
         }
@@ -38,7 +38,7 @@ export const getUserProfile = async (
 export const populateMongooseDocWithUser = async (
   propertyDocument: PropertyModel | null
 ) => {
-  const property = propertyDocument?.toObject();
+  const property = propertyDocument?.toObject({ virtuals: true });
   if (!property) return {};
 
   const user = await getUserProfile(property.createdBy as string);
