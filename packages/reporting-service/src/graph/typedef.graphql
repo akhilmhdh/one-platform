@@ -1,7 +1,1 @@
-type SentryStats {
-  issues: Int
-}
-
-type Query {
-  listNamespaces: SentryStats
-}
+scalar DateTime

@@ -11,4 +11,4 @@ async function main() {
   await startApolloServer(gqlSchema, logger, config);
 }
 
-main().catch(() => console.error('failed to start'));
+main().catch((err) => console.error(err));

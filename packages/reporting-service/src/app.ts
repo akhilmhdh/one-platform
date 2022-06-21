@@ -2,18 +2,27 @@ import { ApolloServer, FastifyContext } from 'apollo-server-fastify';
 import { ApolloServerPluginDrainHttpServer, ContextFunction } from 'apollo-server-core';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { Logger } from 'pino';
-import { mergeSchemas } from '@graphql-tools/schema';
+import { IExecutableSchemaDefinition, mergeSchemas } from '@graphql-tools/schema';
 import fastify, { FastifyInstance } from 'fastify';
 import { GraphQLSchema } from 'graphql';
+import { MongoClient } from 'mongodb';
 
 import { Config } from '@/config';
 
-import analyticSchema from './graph/typedef.graphql';
-import { sentryResolver } from './graph/resolver';
+import { ProjectDatasource } from './datasources/projectDatasource';
+
+// graph
+import { projectResolver } from './graph/project/resolver';
+import projectSchema from './graph/project/typedef.graphql';
+import { sharedResolver } from './graph/resolver';
+import sharedSchema from './graph/typedef.graphql';
 
 export const gqlSchema = mergeSchemas({
-  typeDefs: [analyticSchema],
-  resolvers: [sentryResolver],
+  typeDefs: [projectSchema, sharedSchema],
+  resolvers: [
+    projectResolver,
+    sharedResolver,
+  ] as IExecutableSchemaDefinition<IContext>['resolvers'],
 });
 
 function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
@@ -33,6 +42,11 @@ export const startApolloServer = async (
   serverLogger: Logger,
   cfg: Config
 ) => {
+  // db initialization
+  const client = new MongoClient(cfg.dbURI);
+  await client.connect();
+
+  // server initialization with context and datasources
   const context: ContextFunction<FastifyContext> = ({ request }) => {
     const id = request?.headers?.['x-op-user-id'];
 
@@ -49,7 +63,9 @@ export const startApolloServer = async (
     schema,
     context,
     dataSources: () => {
-      return {};
+      return {
+        projects: new ProjectDatasource(client.db().collection('projects')),
+      };
     },
     formatError: (error) => ({
       message: error.message,

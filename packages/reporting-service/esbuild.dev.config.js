@@ -24,11 +24,23 @@ build({
   })
   .then((build) => {
     if (!build.errors.length) {
+      process.on('SIGINT', () => process.exit(1));
+
       nodemon({
         script: './dist/index.js',
         ext: 'js json',
       });
 
-      console.log('Build finished');
+      nodemon
+        .on('start', function () {
+          console.log('App has started');
+        })
+        .on('quit', function () {
+          console.log('App has quit');
+          process.exit();
+        })
+        .on('restart', function (files) {
+          console.log('App restarted due to: ', files);
+        });
     }
   });

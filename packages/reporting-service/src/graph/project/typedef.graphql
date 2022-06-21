@@ -1,0 +1,40 @@
+type ReportingUser {
+  cn: String
+  uid: String
+  rhatUUID: String
+  rhatJobTitle: String
+  mail: String
+}
+
+type ReportingProject {
+  id: ID
+  name: String
+  description: String
+  members: [ReportingUser]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CreateReportingProjectInput {
+  name: String!
+  description: String
+  members: [ID!]!
+}
+
+input UpdateReportingProjectInput {
+  name: String
+  description: String
+  members: [ID!]
+}
+
+type Query {
+  listReportingProjects: [ReportingProject]
+  getReportingProjectByID: ReportingProject
+}
+
+type Mutation {
+  # To create a reporting project with team members
+  createReportingProject(data: CreateReportingProjectInput): ReportingProject
+  updateReportingProjectByID(id: ID!, data: UpdateReportingProjectInput!): ReportingProject
+  deleteReportingProjectByID(id: ID!): ReportingProject
+}
