@@ -1,4 +1,6 @@
+import DataLoader from 'dataloader';
 import { ProjectDatasource } from '@/datasources/projectDatasource';
+import { IUser } from '@/datasources/types';
 
 declare global {
   type Maybe<T> = T | null;
@@ -16,7 +18,9 @@ declare global {
     dataSources: {
       projects: ProjectDatasource;
     };
-    //   loaders: {};
+    loaders: {
+      user: DataLoader<string, IUser, string>;
+    };
     user: { id: string };
   };
 }

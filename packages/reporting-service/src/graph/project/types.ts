@@ -7,6 +7,7 @@ export type CreateProjectArgs = {
     name: Scalars['String'];
     description: Maybe<Scalars['String']>;
     members: Scalars['String'][];
+    createdBy: string;
   };
 };
 
@@ -16,5 +17,6 @@ export type UpdateProjectArgs = {
     name: Scalars['String'];
     description: Scalars['String'];
     members: Scalars['String'][];
+    updatedBy: string;
   };
 };

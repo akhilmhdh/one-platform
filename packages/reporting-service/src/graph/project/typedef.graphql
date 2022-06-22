@@ -11,6 +11,8 @@ type ReportingProject {
   name: String
   description: String
   members: [ReportingUser]
+  createdBy: ReportingUser
+  updatedBy: ReportingUser
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -18,7 +20,7 @@ type ReportingProject {
 input CreateReportingProjectInput {
   name: String!
   description: String
-  members: [ID!]!
+  members: [ID!]
 }
 
 input UpdateReportingProjectInput {

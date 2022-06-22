@@ -1,5 +1,9 @@
 import { ApolloServer, FastifyContext } from 'apollo-server-fastify';
-import { ApolloServerPluginDrainHttpServer, ContextFunction } from 'apollo-server-core';
+import {
+  ApolloServerPluginDrainHttpServer,
+  AuthenticationError,
+  ContextFunction,
+} from 'apollo-server-core';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { Logger } from 'pino';
 import { IExecutableSchemaDefinition, mergeSchemas } from '@graphql-tools/schema';
@@ -9,7 +13,11 @@ import { MongoClient } from 'mongodb';
 
 import { Config } from '@/config';
 
+// datasources
 import { ProjectDatasource } from './datasources/projectDatasource';
+
+// dataloaders
+import { setupUserDataLoader } from './dataloader';
 
 // graph
 import { projectResolver } from './graph/project/resolver';
@@ -50,7 +58,11 @@ export const startApolloServer = async (
   const context: ContextFunction<FastifyContext> = ({ request }) => {
     const id = request?.headers?.['x-op-user-id'];
 
-    const loaders = {};
+    if (!id) throw new AuthenticationError('you must be logged in');
+
+    const loaders = {
+      user: setupUserDataLoader(cfg.apiGatewayURL, cfg.apiGatewayToken),
+    };
 
     return { loaders, user: { id }, logger: serverLogger };
   };
