@@ -45,6 +45,12 @@ export class ProjectDatasource extends MongoDataSource<IProjectDoc, IContext> {
       throw OPERATION_FAILED_ERR;
     }
 
+    const jobDeleted = await this.context.dataSources.jobConfigs.deleteAllJobsOfAProject(id);
+
+    if (!jobDeleted.acknowledged) {
+      throw OPERATION_FAILED_ERR;
+    }
+
     return doc.value;
   }
 
@@ -54,5 +60,15 @@ export class ProjectDatasource extends MongoDataSource<IProjectDoc, IContext> {
 
   getProjects(options: IGetProjectListDTO) {
     return this.findByFields({ members: options.userID });
+  }
+
+  async isAMemberOfProject(projectID: string, userID: string) {
+    const doc = await this.findOneById(projectID);
+
+    if (!doc) {
+      throw new Error('Project not found');
+    }
+
+    return doc?.members.some((value) => value === userID);
   }
 }

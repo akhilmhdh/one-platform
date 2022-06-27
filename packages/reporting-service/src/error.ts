@@ -10,3 +10,5 @@ export class GQLValidationError extends Error {
 }
 
 export const InvalidMongoIDMsg = 'Invalid mongodb id';
+
+export const UnauthorizedProjectAccess = new Error('Unauthorized access to project');

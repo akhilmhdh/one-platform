@@ -1,0 +1,79 @@
+enum ReportingJobFileType {
+  JSON
+  YAML
+}
+
+type ReportingFn {
+  method: String
+  endpoint: String
+}
+
+input CreateReportingJobFnInput {
+  method: String!
+  endpoint: String!
+}
+
+input UpdateReportingJobFnInput {
+  method: String
+  endpoint: String
+}
+
+type ReportingJobPayload {
+  type: ReportingJobFileType
+}
+
+input ReportingJobPayloadInput {
+  type: ReportingJobFileType
+}
+
+type ReportingJob {
+  payload: ReportingJobPayload
+  fn: ReportingFn
+}
+
+input CreateReportingJob {
+  payload: ReportingJobPayloadInput
+  fn: CreateReportingJobFnInput!
+}
+
+type ReportingJobConfig {
+  id: ID
+  name: String
+  description: String
+  createdBy: ReportingUser
+  updatedBy: ReportingUser
+  createdAt: DateTime
+  updatedAt: DateTime
+  cron: String
+  jobs: [ReportingJob]
+}
+
+# INPUTS
+input CreateReportingJobInput {
+  name: String!
+  description: String
+  cron: String
+  jobs: [CreateReportingJob]
+}
+
+input UpdateReportingJobInput {
+  name: String
+  description: String
+  cron: String
+  jobs: [CreateReportingJob]
+}
+
+type Query {
+  listReportingJobs(projectID: ID!): [ReportingJobConfig]
+  getReportingJobByID(projectID: ID!, id: ID!): ReportingJobConfig
+}
+
+type Mutation {
+  createReportingJob(projectID: ID!, data: CreateReportingJobInput!): ReportingJobConfig
+  updateReportingJobByID(
+    projectID: ID!
+    jobID: ID!
+    data: UpdateReportingJobInput!
+  ): ReportingJobConfig
+  deleteReportingJobByID(projectID: ID!, jobID: ID!): ReportingJobConfig
+}
