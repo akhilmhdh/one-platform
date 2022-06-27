@@ -46,12 +46,35 @@ export type IJobConfig = {
 
 export type IJobPayload = {
   type: JobPayloadFileType;
+  fields?: IJobField;
 };
 
 export type IJobFn = {
   method: string;
   endpoint: string;
 };
+
+export type IJobField = {
+  condition?: FieldBaseOperators;
+  rules: IJobRules[];
+  not?: boolean;
+};
+
+export type IJobRules = { field: string; operator: FieldOperators; value: unknown } | IJobField;
+
+export enum FieldBaseOperators {
+  AND = 'AND',
+  OR = 'OR',
+}
+
+export enum FieldOperators {
+  EQ = 'EQ',
+  LT = 'LT',
+  LTE = 'LTE',
+  GT = 'GT',
+  GTE = 'GTE',
+  IN = 'IN',
+}
 
 // DTO
 export type ICreateProjectDTO = {

@@ -1,8 +1,21 @@
-import { IUser, JobPayloadFileType } from '@/datasources/types';
+import { FieldBaseOperators, FieldOperators, IUser, JobPayloadFileType } from '@/datasources/types';
 
 export type ReportingJobTask = {
   method: Scalars['String'];
   endpoint: Scalars['String'];
+};
+
+export type ReportingPayloadFieldInput = {
+  condition: FieldBaseOperators;
+  not: boolean;
+  rules: ReportingRuleInput[];
+};
+
+export type ReportingRuleInput = {
+  field: string;
+  operator: FieldOperators;
+  value: string;
+  rule: ReportingPayloadFieldInput[];
 };
 
 export type ReportingJobPayload = {
@@ -11,6 +24,7 @@ export type ReportingJobPayload = {
 
 export type ReportingJobPayloadInput = {
   type: JobPayloadFileType;
+  fields: ReportingPayloadFieldInput;
 };
 
 export type ReportingJob = {
@@ -34,7 +48,7 @@ export type CreateReportingJobInput = {
     description: Scalars['String'];
     cron: Scalars['String'];
     jobs: Array<{
-      payload: ReportingJobPayload;
+      payload: ReportingJobPayloadInput;
       fn: ReportingJobTask;
     }>;
   };
@@ -47,7 +61,7 @@ export type UpdateReportingJobInput = {
     description: Scalars['String'];
     cron: Scalars['String'];
     jobs: Array<{
-      payload: ReportingJobPayload;
+      payload: ReportingJobPayloadInput;
       fn: ReportingJobTask;
     }>;
   };

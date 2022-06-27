@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 import { joiValidateMongoDBObjectID } from '@/lib/validateMongoObjectID';
 import { CreateReportingJobInput, DeleteReportingJobInput, UpdateReportingJobInput } from './types';
+import { FieldBaseOperators, FieldOperators } from '@/datasources/types';
 
 export const createJobConfigValidation = Joi.object<CreateReportingJobInput>({
   projectID: Joi.string().required().custom(joiValidateMongoDBObjectID),
@@ -14,6 +15,22 @@ export const createJobConfigValidation = Joi.object<CreateReportingJobInput>({
         Joi.object({
           payload: Joi.object({
             type: Joi.string().valid('JSON', 'YAML'),
+            fields: Joi.object({
+              condition: Joi.string()
+                .valid(...Object.values(FieldBaseOperators))
+                .default(FieldBaseOperators.AND),
+              not: Joi.bool().default(false),
+              rules: Joi.array().items(
+                Joi.object({
+                  field: Joi.string().required(),
+                  operator: Joi.string()
+                    .required()
+                    .valid(...Object.values(FieldOperators)),
+                  value: Joi.string().required(),
+                  rule: Joi.array().items(Joi.link('....fields')),
+                })
+              ),
+            }),
           }),
           fn: Joi.object({
             method: Joi.string().required(),

@@ -51,8 +51,8 @@ function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
 }
 
 export const startAgenda = async (agenda: Agenda) => {
-  agenda.define('pull-data', { concurrency: 10 }, (job: Job) => {
-    console.log(`${job?.attrs?.data?.info as string} - completed`);
+  agenda.define('monitor', { concurrency: 10 }, (job: Job) => {
+    console.log(`${job?.attrs?.data?.jobID as string} - completed`);
   });
 
   await agenda.start();

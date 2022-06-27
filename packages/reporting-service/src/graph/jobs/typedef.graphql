@@ -3,37 +3,47 @@ enum ReportingJobFileType {
   YAML
 }
 
+enum FieldBaseOperators {
+  AND
+  OR
+}
+
+enum FieldOperators {
+  EQ
+  LT
+  LTE
+  GT
+  GTE
+  IN
+}
+
 type ReportingFn {
   method: String
   endpoint: String
 }
 
-input CreateReportingJobFnInput {
-  method: String!
-  endpoint: String!
+type ReportingPayloadField {
+  condition: FieldBaseOperators
+  not: Boolean
+  rules: [ReportingRule]
 }
 
-input UpdateReportingJobFnInput {
-  method: String
-  endpoint: String
+type ReportingPayloadFieldRule {
+  field: String
+  operator: FieldOperators
+  value: String
 }
+
+union ReportingRule = ReportingPayloadField | ReportingPayloadFieldRule
 
 type ReportingJobPayload {
   type: ReportingJobFileType
-}
-
-input ReportingJobPayloadInput {
-  type: ReportingJobFileType
+  fields: ReportingPayloadField
 }
 
 type ReportingJob {
   payload: ReportingJobPayload
   fn: ReportingFn
-}
-
-input CreateReportingJob {
-  payload: ReportingJobPayloadInput
-  fn: CreateReportingJobFnInput!
 }
 
 type ReportingJobConfig {
@@ -61,6 +71,39 @@ input UpdateReportingJobInput {
   description: String
   cron: String
   jobs: [CreateReportingJob]
+}
+
+input ReportingPayloadFieldInput {
+  condition: FieldBaseOperators
+  not: Boolean
+  rules: [ReportingRuleInput]
+}
+
+input ReportingRuleInput {
+  field: String
+  operator: FieldOperators
+  value: String
+  rule: [ReportingPayloadFieldInput]
+}
+
+input CreateReportingJobFnInput {
+  method: String!
+  endpoint: String!
+}
+
+input UpdateReportingJobFnInput {
+  method: String
+  endpoint: String
+}
+
+input ReportingJobPayloadInput {
+  type: ReportingJobFileType
+  fields: ReportingPayloadFieldInput
+}
+
+input CreateReportingJob {
+  payload: ReportingJobPayloadInput
+  fn: CreateReportingJobFnInput!
 }
 
 type Query {
