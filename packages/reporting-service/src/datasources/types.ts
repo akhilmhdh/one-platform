@@ -1,5 +1,7 @@
 import { ObjectId } from 'mongodb';
 
+import { Field } from '@/lib/equations';
+
 export type IProjectDoc = {
   _id: ObjectId;
   name: string;
@@ -38,6 +40,7 @@ export type IJobConfig = {
     fn: IJobFn;
     payload?: IJobPayload;
   }>;
+  effects: [IJobEffects];
   createdBy: string;
   updatedBy: string;
   createdAt: Date;
@@ -46,7 +49,19 @@ export type IJobConfig = {
 
 export type IJobPayload = {
   type: JobPayloadFileType;
-  fields?: IJobField;
+  fields?: Field;
+};
+
+export type IJobPlayload = {
+  _id: ObjectId;
+  payloads: Array<{
+    url: string;
+    method: string;
+    payload: string;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+  jobID: ObjectId;
 };
 
 export type IJobFn = {
@@ -54,27 +69,13 @@ export type IJobFn = {
   endpoint: string;
 };
 
-export type IJobField = {
-  condition?: FieldBaseOperators;
-  rules: IJobRules[];
-  not?: boolean;
+export type IJobEmailEffect = {
+  to: string;
+  cc: string;
+  template: string;
 };
 
-export type IJobRules = { field: string; operator: FieldOperators; value: unknown } | IJobField;
-
-export enum FieldBaseOperators {
-  AND = 'AND',
-  OR = 'OR',
-}
-
-export enum FieldOperators {
-  EQ = 'EQ',
-  LT = 'LT',
-  LTE = 'LTE',
-  GT = 'GT',
-  GTE = 'GTE',
-  IN = 'IN',
-}
+export type IJobEffects = IJobEmailEffect;
 
 // DTO
 export type ICreateProjectDTO = {
@@ -101,4 +102,10 @@ export type IUpdateJobDTO = Partial<Omit<IJobConfig, '_id' | 'createdAt' | 'upda
 
 export type IGetJobListDTO = {
   projectID: string;
+};
+
+export type IUpsertJobPayloadDTO = {
+  url: string;
+  method: string;
+  payload: string;
 };

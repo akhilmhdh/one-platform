@@ -1,8 +1,8 @@
 import DataLoader from 'dataloader';
-import Agenda from 'agenda';
 import { ProjectDatasource } from '@/datasources/projectDatasource';
 import { JobConfigDatasource } from '@/datasources/jobConfigDatasource';
 import { IUser } from '@/datasources/types';
+import { ICronManager } from '@/cron/cron';
 
 declare global {
   type Maybe<T> = T | null;
@@ -25,6 +25,6 @@ declare global {
       user: DataLoader<string, IUser, string>;
     };
     user: { id: string };
-    agenda: Agenda;
+    cron: ICronManager;
   };
 }

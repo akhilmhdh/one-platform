@@ -2,7 +2,7 @@
 import { IExecutableSchemaDefinition } from '@graphql-tools/schema';
 
 import { GQLValidationError, UnauthorizedProjectAccess } from '@/error';
-import { FieldBaseOperators, IJobField, IJobRules } from '@/datasources/types';
+import { FieldBaseOperators, Field, Rule } from '@/lib/equations';
 
 import {
   createJobConfigValidation,
@@ -12,9 +12,7 @@ import {
 
 import { ReportingPayloadFieldInput, ReportingRuleInput } from './types';
 
-const getPayloadHelper = (
-  field: ReportingPayloadFieldInput | ReportingRuleInput
-): IJobField | IJobRules => {
+const getPayloadHelper = (field: ReportingPayloadFieldInput | ReportingRuleInput): Field | Rule => {
   if (!(field as ReportingRuleInput)?.rule) {
     const f = field as ReportingRuleInput;
     return { field: f.field, operator: f.operator, value: f.value };
@@ -28,7 +26,7 @@ const getPayloadHelper = (
   };
 };
 
-const getPayloadRules = (field: ReportingPayloadFieldInput): IJobField => {
+const getPayloadRules = (field: ReportingPayloadFieldInput): Field => {
   return {
     condition: field?.condition || FieldBaseOperators.AND,
     not: Boolean(field?.not),
@@ -49,6 +47,11 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
         return 'ReportingPayloadFieldRule';
       }
       return 'ReportingPayloadField';
+    },
+  },
+  JobEffects: {
+    __resolveType() {
+      return 'JobEffectEmail';
     },
   },
   Query: {
@@ -78,11 +81,7 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
     },
   },
   Mutation: {
-    async createReportingJob(
-      _parent,
-      args,
-      { dataSources: { jobConfigs, projects }, agenda, user }
-    ) {
+    async createReportingJob(_parent, args, { dataSources: { jobConfigs, projects }, cron, user }) {
       const { error, value } = createJobConfigValidation.validate(args);
       if (error) {
         throw new GQLValidationError(error.details);
@@ -100,19 +99,19 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
           fn,
           payload: { type: payload.type, fields: getPayloadRules(payload.fields) },
         })),
+        effects: [data?.effects?.email],
         createdBy: user.id,
       });
 
       if (job?.cron) {
-        const cron = agenda.create('monitor', { jobID: job?._id.toString() });
-        await cron.repeatEvery(job.cron).save();
+        await cron.startAJob(job._id.toString(), job.cron);
       }
       return job;
     },
     async updateReportingJobByID(
       _parent,
       args,
-      { dataSources: { jobConfigs, projects }, agenda, user }
+      { dataSources: { jobConfigs, projects }, cron, user }
     ) {
       const { value, error } = updateJobConfigValidation.validate(args);
 
@@ -121,7 +120,6 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
       }
 
       const { data, projectID, jobID } = value;
-      const collection = agenda._collection;
 
       const isMember = await projects.isAMemberOfProject(projectID, user.id);
       if (!isMember) {
@@ -141,9 +139,7 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
       });
 
       if (data?.cron) {
-        await collection.findOneAndDelete({ 'data.jobID': jobID });
-        const cron = agenda.create('monitor', { jobID: doc?._id.toString() });
-        await cron.repeatEvery(data?.cron).save();
+        await cron.updateAJob(jobID, data.cron);
       }
 
       return doc;
@@ -151,7 +147,7 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
     async deleteReportingJobByID(
       _parent,
       args,
-      { dataSources: { jobConfigs, projects }, agenda, user }
+      { dataSources: { jobConfigs, projects }, cron, user }
     ) {
       const { error, value } = deleteJobConfigValidation.validate(args);
 
@@ -160,8 +156,7 @@ export const reportingJobResolver: IExecutableSchemaDefinition<IContext>['resolv
       }
       const { projectID, jobID } = value;
 
-      const collection = agenda._collection;
-      await collection.findOneAndDelete({ 'data.jobID': jobID });
+      await cron.deleteAJob(jobID);
 
       const isMember = await projects.isAMemberOfProject(projectID, user.id);
       if (!isMember) {

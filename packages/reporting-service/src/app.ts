@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { ApolloServer, FastifyContext } from 'apollo-server-fastify';
 import {
   ApolloServerPluginDrainHttpServer,
@@ -10,8 +11,6 @@ import { IExecutableSchemaDefinition, mergeSchemas } from '@graphql-tools/schema
 import fastify, { FastifyInstance } from 'fastify';
 import { GraphQLSchema } from 'graphql';
 import { MongoClient } from 'mongodb';
-import { Agenda, Job } from 'agenda';
-
 import { Config } from '@/config';
 
 // datasources
@@ -28,6 +27,7 @@ import reportingJobSchema from './graph/jobs/typedef.graphql';
 import { sharedResolver } from './graph/resolver';
 import sharedSchema from './graph/typedef.graphql';
 import { JobConfigDatasource } from './datasources/jobConfigDatasource';
+import { ICronManager } from './cron/cron';
 
 export const gqlSchema = mergeSchemas({
   typeDefs: [projectSchema, reportingJobSchema, sharedSchema],
@@ -50,17 +50,9 @@ function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
   };
 }
 
-export const startAgenda = async (agenda: Agenda) => {
-  agenda.define('monitor', { concurrency: 10 }, (job: Job) => {
-    console.log(`${job?.attrs?.data?.jobID as string} - completed`);
-  });
-
-  await agenda.start();
-};
-
 export const startApolloServer = async (
   schema: GraphQLSchema,
-  agenda: Agenda,
+  cron: ICronManager,
   client: MongoClient,
   serverLogger: Logger,
   cfg: Config
@@ -75,7 +67,7 @@ export const startApolloServer = async (
       user: setupUserDataLoader(cfg.apiGatewayURL, cfg.apiGatewayToken),
     };
 
-    return { loaders, user: { id }, logger: serverLogger, agenda };
+    return { loaders, user: { id }, logger: serverLogger, cron };
   };
 
   const app = fastify({

@@ -1,4 +1,5 @@
-import { FieldBaseOperators, FieldOperators, IUser, JobPayloadFileType } from '@/datasources/types';
+import { IUser, JobPayloadFileType } from '@/datasources/types';
+import { FieldBaseOperators, FieldOperators } from '@/lib/equations';
 
 export type ReportingJobTask = {
   method: Scalars['String'];
@@ -27,6 +28,16 @@ export type ReportingJobPayloadInput = {
   fields: ReportingPayloadFieldInput;
 };
 
+export type ReportingJobEmailEffect = {
+  to: Scalars['String'];
+  cc: Scalars['String'];
+  template: Scalars['String'];
+};
+
+export type ReportJobEffect = {
+  email: ReportingJobEmailEffect;
+};
+
 export type ReportingJob = {
   id: Scalars['ID'];
   name: Scalars['String'];
@@ -51,6 +62,7 @@ export type CreateReportingJobInput = {
       payload: ReportingJobPayloadInput;
       fn: ReportingJobTask;
     }>;
+    effects: ReportJobEffect;
   };
   projectID: string;
 };

@@ -34,6 +34,24 @@ type ReportingPayloadFieldRule {
   value: String
 }
 
+type JobEffectEmail {
+  to: String
+  template: String
+  cc: String
+}
+
+input JobEffectEmailInput {
+  to: String!
+  template: String!
+  cc: String
+}
+
+input JobEffectInput {
+  email: JobEffectEmailInput
+}
+
+union JobEffects = JobEffectEmail
+
 union ReportingRule = ReportingPayloadField | ReportingPayloadFieldRule
 
 type ReportingJobPayload {
@@ -56,6 +74,7 @@ type ReportingJobConfig {
   updatedAt: DateTime
   cron: String
   jobs: [ReportingJob]
+  effects: [JobEffects]
 }
 
 # INPUTS
@@ -64,6 +83,7 @@ input CreateReportingJobInput {
   description: String
   cron: String
   jobs: [CreateReportingJob]
+  effects: JobEffectInput
 }
 
 input UpdateReportingJobInput {
